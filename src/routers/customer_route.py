@@ -1,35 +1,34 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status
 
-from ..models import model
-from ..db import db
-from ..services import customer_services
+from src.models.model import Customer
+from src.services.customer_services import create_customer, get_all, update_customer, delete_customer, get_customer
 
 
 router = APIRouter()
 
 
-@router.get('/api/v1/customer', status_code=status.HTTP_202_ACCEPTED)
+@router.get('', status_code=status.HTTP_200_OK)
 def all_customers():
-    return customer_services.get_all()
+    return get_all()
 
 
-@router.get('/api/v1/customer/{id}', status_code=status.HTTP_202_ACCEPTED)
-def get_customer(id: int):
-    return customer_services.get_customer(id)
+@router.post('/create', status_code=status.HTTP_201_CREATED)
+def create_customer(customer: Customer):
+    return create_customer(customer)
 
 
-@router.post('/api/v1/customer', status_code=status.HTTP_201_CREATED)
-def create_customer(customer: model.Customer):
-    return customer_services.create_customer(customer)
-
-
-@router.put('/api/v1/customer/{id}', status_code=status.HTTP_202_ACCEPTED)
+@router.put('/update/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update_customer(id: int, customer: model.Customer):
-    return customer_services.update_customer(customer)
+def update_customer(id: int, customer: Customer):
+    return update_customer(customer)
 
 
-@router.delete('/api/v1/customer/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 # should update optional fields
 def delete_customer(id: int):
-    return customer_services.delete_customer(id)
+    return delete_customer(id)
+
+
+@router.get('/{id}', status_code=status.HTTP_200_OK)
+def get_customer(id: int):
+    return get_customer(id)

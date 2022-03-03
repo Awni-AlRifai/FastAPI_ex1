@@ -15,10 +15,10 @@ class Customer(BaseModel):
     age: int
     gender: Gender
     adult: bool
-    adress_id: int
+    address_id: int
 
 
-class Adress(BaseModel):
+class Address(BaseModel):
     id: int
     phone: int
     email: str

@@ -1,35 +1,34 @@
 from fastapi import APIRouter, status, HTTPException
 
-from ..models import model
-from ..db import db
-from ..services import address_services
+from src.models import model
+from src.services import address_services
 
 
 router = APIRouter()
 
 
-@router.get('/api/v1/adress', status_code=status.HTTP_202_ACCEPTED)
-def all_adresss():
+@router.get('', status_code=status.HTTP_202_ACCEPTED)
+def all_address():
     return address_services.get_all()
 
 
-@router.get('/api/v1/adress/{id}', status_code=status.HTTP_202_ACCEPTED)
-def get_address(id: int):
-    return address_services.get_address(id)
-
-
-@router.post('/api/v1/adress', status_code=status.HTTP_201_CREATED)
-def create_adress(address: model.Adress):
+@router.post('/create', status_code=status.HTTP_201_CREATED)
+def create_address(address: model.Address):
     return address_services.create_address(address)
 
 
-@router.put('/api/v1/adress/{id}', status_code=status.HTTP_202_ACCEPTED)
+@router.put('/update/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update_adress(id: int, address: model.Adress):
+def update_address(id: int, address: model.Address):
     return address_services.update_address(address)
 
 
-@router.delete('/api/v1/adress/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 # should update optional fields
-def delete_adress(id: int):
+def delete_address(id: int):
     return address_services.update_address(id)
+
+
+@router.get('/{id}', status_code=status.HTTP_202_ACCEPTED)
+def get_address(id: int):
+    return address_services.get_address(id)

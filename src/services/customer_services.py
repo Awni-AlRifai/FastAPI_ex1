@@ -1,14 +1,14 @@
 from typing import List
-from fastapi import HTTPException, status
 
+from fastapi import HTTPException, status
+from src.db.db import fake_customer_db, fake_address_db
 from src.models.model import Customer
-from src.db.db import fake_customer_db
 
 # we should handle the results seperately
 
 
 def get_all() -> list:
-    """_summary_
+    """ get all customer from customers table
 
     Returns:
         List: returns a list of customers
@@ -26,7 +26,7 @@ def get_customer(id: int):
 
 
 def create_customer(customer: Customer) -> str:
-    """_summary_
+    """create customers
 
     Args:
         customer (model.Customer): accepts Customer object
@@ -39,7 +39,7 @@ def create_customer(customer: Customer) -> str:
 
 
 def update_customer(id: int, customer: Customer) -> str:
-    """_summary_
+    """update customers based on id given and customer object given
 
     Args:
         id (int): accepts customer id of int type
@@ -63,7 +63,7 @@ def update_customer(id: int, customer: Customer) -> str:
 
 def delete_customer(id: int):
     # should update optional fields
-    """_summary_
+    """delete customer and his address based on id and address_id
 
     Args:
         id (int): accepts a customer id of int type
@@ -72,9 +72,15 @@ def delete_customer(id: int):
         HTTPException: raises and exception when the id provided is not found
     """
     customers = fake_customer_db
+    addresses = fake_address_db
+    global customer_addres_id
     for saved_customer in customers:
         if saved_customer['id'] == id:
+            customer_addres_id = saved_customer['address_id']
             customers.remove(saved_customer)
-
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The customer you are trying to update was not found')
+    if(not customer_addres_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'The customer you are trying to update was not found')
+    for address in addresses:
+        if address['id'] == customer_addres_id:
+            addresses.remove(address)

@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy import null
 
-from src.models.model import Adress
+from src.models.model import Address
 from src.db.db import fake_address_db
 # we should handle the results seperately
 
@@ -16,7 +16,7 @@ def get_all() -> list:
     return fake_address_db
 
 
-def get_address(id: int) -> Adress:
+def get_address(id: int) -> Address:
     """get a specific address from an id
 
     Args:
@@ -26,35 +26,35 @@ def get_address(id: int) -> Adress:
         HTTPException: raises and exception when the id provided is not found
 
     Returns:
-        Adress: return a dict of type Address
+        Address: return a dict of type Address
     """
-    adressses = fake_address_db
-    for adress in adressses:
-        if adress['id'] == id:
-            return adress
+    addressses = fake_address_db
+    for address in addressses:
+        if address['id'] == id:
+            return address
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The adress you are trying to find was not found')
+                        detail=f'The address you are trying to find was not found')
 
 
-def create_address(adress: Adress) -> str:
+def create_address(address: Address) -> str:
     """create a record in the table address 
 
     Args:
-        adress (Adress): accepts a dict of type Address
+        address (Address): accepts a dict of type Address
 
     Returns:
         str: returns success message
     """
-    fake_address_db.append(adress)
+    fake_address_db.append(address)
     return "created successfully"
 
 
-def update_address(id: int, address: Adress) -> str:
+def update_address(id: int, address: Address) -> str:
     """update the a specific Address based on id
 
     Args:
         id (int): Address id of type int
-        address (Adress): dict of Address
+        address (Address): dict of Address
 
     Raises:
         HTTPException: raises and exception when the id provided is not found
@@ -68,7 +68,7 @@ def update_address(id: int, address: Adress) -> str:
             saved_address = address
             return 'updated successfully'
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The adress you are trying to update was not found')
+                        detail=f'The address you are trying to update was not found')
 
 
 def delete_address(id: int) -> None:
@@ -81,10 +81,10 @@ def delete_address(id: int) -> None:
         HTTPException: raises and exception when the id provided is not found
     """
     # should update optional fields
-    adresss = fake_address_db
-    for saved_adress in adresss:
-        if saved_adress['id'] == id:
-            adresss.remove(saved_adress)
+    addresss = fake_address_db
+    for saved_address in addresss:
+        if saved_address['id'] == id:
+            addresss.remove(saved_address)
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The adress you are trying to update was not found')
+                        detail=f'The address you are trying to update was not found')
