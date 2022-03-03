@@ -15,3 +15,14 @@ class Customer(BaseModel):
     gender: Gender
     adult: bool
     adress_id: int
+
+
+class Adress(BaseModel):
+    id: int
+    phone: int
+    email: str
+    country:str
+    city:str
+    street:str
+    
+   
