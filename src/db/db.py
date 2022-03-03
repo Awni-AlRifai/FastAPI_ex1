@@ -1,4 +1,6 @@
-from src.schema.scheams import Gender
+
+
+from src.models.model import Gender
 
 
 fake_customer_db = [

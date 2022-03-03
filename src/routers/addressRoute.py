@@ -1,5 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
-from ..schema import scheams, db
+
+from ..models import model
+from ..db import db
 
 
 router = APIRouter()
@@ -21,14 +23,14 @@ def get_adress(id: int):
 
 
 @router.post('/api/v1/adress', status_code=status.HTTP_201_CREATED)
-def create_adress(adress: scheams.Adress):
+def create_adress(adress: model.Adress):
     db.fake_address_db.append(adress)
     return 'created successfully'
 
 
 @router.put('/api/v1/adress/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update_adress(id: int, adress: scheams.Adress):
+def update_adress(id: int, adress: model.Adress):
     adresss = db.fake_address_db
     for saved_adress in adresss:
         if saved_adress['id'] == id:

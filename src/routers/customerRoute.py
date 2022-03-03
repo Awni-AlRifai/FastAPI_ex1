@@ -1,5 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
-from ..schema import scheams, db
+
+from ..models import model
+from ..db import db
 
 
 router = APIRouter()
@@ -21,14 +23,14 @@ def get_customer(id: int):
 
 
 @router.post('/api/v1/customer', status_code=status.HTTP_201_CREATED)
-def create_customer(customer: scheams.Customer):
+def create_customer(customer: model.Customer):
     db.fake_customer_db.append(customer)
     return 'created successfully'
 
 
 @router.put('/api/v1/customer/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update_customer(id: int, customer: scheams.Customer):
+def update_customer(id: int, customer: model.Customer):
     customers = db.fake_customer_db
     for saved_customer in customers:
         if saved_customer['id'] == id:
