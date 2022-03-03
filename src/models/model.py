@@ -8,6 +8,7 @@ class Gender(str, Enum):
 
 
 class Customer(BaseModel):
+
     id: int
     first_name: str
     last_name: str
@@ -21,8 +22,6 @@ class Adress(BaseModel):
     id: int
     phone: int
     email: str
-    country:str
-    city:str
-    street:str
-    
-   
+    country: str
+    city: str
+    street: str
