@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .routers import addressRoute, customerRoute
+from .routers import address_route, customer_route
 
 app = FastAPI()
-app.include_router(customerRoute.router)
-app.include_router(addressRoute.router)
+app.include_router(customer_route.router)
+app.include_router(address_route.router)

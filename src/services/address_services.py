@@ -1,19 +1,16 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import HTTPException, status
 
 from ..models import model
 from ..db import db
 
+# we should handle the results seperately
 
-router = APIRouter()
 
-
-@router.get('/api/v1/adress', status_code=status.HTTP_202_ACCEPTED)
-def all_adresss():
+def get_all():
     return db.fake_address_db
 
 
-@router.get('/api/v1/adress/{id}', status_code=status.HTTP_202_ACCEPTED)
-def get_adress(id: int):
+def get_address(id: int):
     adressses = db.fake_address_db
     for adress in adressses:
         if adress['id'] == id:
@@ -22,30 +19,25 @@ def get_adress(id: int):
                         detail=f'The adress you are trying to find was not found')
 
 
-@router.post('/api/v1/adress', status_code=status.HTTP_201_CREATED)
-def create_adress(adress: model.Adress):
+def create_address(adress: model.Adress):
     db.fake_address_db.append(adress)
-    return 'created successfully'
+    return "created successfully"
 
 
-@router.put('/api/v1/adress/{id}', status_code=status.HTTP_202_ACCEPTED)
-# should update optional fields
-def update_adress(id: int, adress: model.Adress):
-    adresss = db.fake_address_db
-    for saved_adress in adresss:
-        if saved_adress['id'] == id:
-            saved_adress = adress
+def update_address(address: model.Adress):
+    address = db.fake_address_db
+    for save_address in address:
+        if saved_address['id'] == id:
+            saved_address = address
             return 'updated successfully'
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The adress you are trying to update was not found')
 
 
-@router.delete('/api/v1/adress/{id}', status_code=status.HTTP_204_NO_CONTENT)
-# should update optional fields
-def delete_adress(id: int):
+def delete_address(id: int):
+    # should update optional fields
     adresss = db.fake_address_db
     for saved_adress in adresss:
-
         if saved_adress['id'] == id:
             adresss.remove(saved_adress)
 
