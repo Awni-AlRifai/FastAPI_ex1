@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import null
 
 from src.models.model import Address
-from src.db.db import fake_address_db
+from src.db.db import fake_address_db, fake_customer_db
 # we should handle the results seperately
 
 
@@ -14,6 +14,25 @@ def get_all() -> list:
     """
 
     return fake_address_db
+
+
+def get_address_id_from_customer(id: int) -> int:
+    """ accepts customer id and returns address id related to the customer 
+
+    Args:
+        id (int): accepts customer_id of id type int
+
+    Returns:
+        int: returns address id 
+    """
+    customers = fake_customer_db
+    for customer in customers:
+        if customer['id'] == id:
+            return customer['address_id']
+        
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail=f'The customer you are trying to find address to is not found')
+
 
 
 def get_address(id: int) -> Address:

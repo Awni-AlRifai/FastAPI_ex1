@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status
 
 from src.models import model
 from src.services import address_services
@@ -32,3 +32,9 @@ def delete_address(id: int):
 @router.get('/{id}', status_code=status.HTTP_202_ACCEPTED)
 def get_address(id: int):
     return address_services.get_address(id)
+
+
+@router.get('/customer/{id}', status_code=status.HTTP_200_OK)
+def get_address_from_customer(id: int):
+    address_id = address_services.get_address_id_from_customer(id)
+    return address_services.get_address(address_id)
