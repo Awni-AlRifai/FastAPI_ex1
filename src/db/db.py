@@ -1,8 +1,5 @@
-
-
 from uuid import uuid4
 from src.models.model import Gender
-
 
 fake_customer_db = [
     {"id": uuid4(), "first_name": "Mohammad", "last_name": "Ahamd", "age": 25,

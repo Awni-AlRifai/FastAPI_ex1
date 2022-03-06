@@ -1,6 +1,5 @@
 from uuid import UUID
 from fastapi import APIRouter, status
-
 from src.models.model import Customer
 from src.services.customer_services import create_customer, get_all, update_customer, delete_customer, get_customer
 
@@ -31,5 +30,5 @@ def delete(id: UUID):
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK)
-def get_customer(id: UUID):
+def show_customer(id: UUID):
     return get_customer(id)

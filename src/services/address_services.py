@@ -1,10 +1,8 @@
 from uuid import UUID, uuid4
 from fastapi import HTTPException, status
-from sqlalchemy import null
-
 from src.models.model import Address
 from src.db.db import fake_address_db, fake_customer_db
-# we should handle the results seperately
+
 
 
 def get_all() -> list:

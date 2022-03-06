@@ -1,6 +1,5 @@
 from uuid import UUID
 from fastapi import APIRouter, status
-
 from src.models.model import Address
 from src.services.address_services import get_all, create_address, update_address, get_address, get_address_id_from_customer, delete_address
 
