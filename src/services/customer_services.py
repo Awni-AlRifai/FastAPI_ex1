@@ -1,4 +1,5 @@
 from typing import List
+from uuid import uuid4
 
 from fastapi import HTTPException, status
 from src.db.db import fake_customer_db, fake_address_db
