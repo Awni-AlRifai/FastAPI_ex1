@@ -35,6 +35,7 @@ def create_customer(customer: Customer) -> str:
     Returns:
         str: returns simple success message
     """
+    customer.id = uuid4()
     fake_customer_db.append(dict(customer))
     return "created successfully"
 

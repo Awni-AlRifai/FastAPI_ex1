@@ -1,3 +1,4 @@
+from uuid import UUID
 from fastapi import APIRouter, status
 
 from src.models.model import Address
@@ -19,22 +20,22 @@ def create(address: Address):
 
 @router.put('/update/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update(id: int, address: Address):
+def update(id: UUID, address: Address):
     return update_address(id, address)
 
 
 @router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 # should update optional fields
-def delete(id: int):
+def delete(id: UUID):
     return delete_address(id)
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK)
-def get(id: int):
+def get(id: UUID):
     return get_address(id)
 
 
 @router.get('/customer/{id}', status_code=status.HTTP_200_OK)
-def show_address_from_customer(id: int):
+def show_address_from_customer(id: UUID):
     address_id = get_address_id_from_customer(id)
     return get_address(address_id)

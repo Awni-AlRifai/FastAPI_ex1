@@ -64,7 +64,8 @@ def create_address(address: Address) -> str:
     Returns:
         str: returns success message
     """
-    fake_address_db.append(dict(address))
+    address.id = uuid4()
+    fake_address_db.append(address)
     return "created successfully"
 
 

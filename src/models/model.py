@@ -1,5 +1,6 @@
 from enum import Enum
-from uuid import uuid4
+from typing import Optional
+from uuid import UUID, uuid4
 from pydantic import BaseModel
 
 
@@ -9,7 +10,7 @@ class Gender(str, Enum):
 
 
 class Customer(BaseModel):
-    id = uuid4()
+    id: Optional[UUID]
     first_name: str
     last_name: str
     age: int
@@ -19,8 +20,8 @@ class Customer(BaseModel):
 
 
 class Address(BaseModel):
-    id = uuid4()
-    phone: int
+    id: Optional[UUID]
+    phone: str
     email: str
     country: str
     city: str
