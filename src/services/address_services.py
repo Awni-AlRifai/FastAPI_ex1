@@ -78,7 +78,7 @@ def update_address(id: int, address: Address) -> str:
         HTTPException: raises and exception when the id provided is not found
 
     Returns:
-        str: simple success message
+        str: simple success message 
     """
     addresses = fake_address_db
     for saved_address in addresses:
