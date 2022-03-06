@@ -15,7 +15,19 @@ def get_all() -> list:
     return fake_customer_db
 
 
-def get_customer(id: UUID):
+def get_customer(id: UUID) -> Customer:
+    """ gets cusotmer id from customers table and returns the customer that have the same id
+
+    Args:
+        id (UUID): customer id of type UUID
+
+    Raises:
+        HTTPException: raises not found exception when the customer id is not found
+
+    Returns:
+        Customer: returns customer of type Customer
+    """
+
     customers = fake_customer_db
     for customer in customers:
         if customer['id'] == id:
@@ -24,21 +36,21 @@ def get_customer(id: UUID):
                         detail=f'The customer you are trying to find was not found')
 
 
-def create_customer(customer: Customer) -> str:
+def create_customer(customer: Customer) -> Customer:
     """create customers
 
     Args:
         customer (model.Customer): accepts Customer object
 
     Returns:
-        str: returns simple success message
+        Customer: returns created customer 
     """
     customer.id = uuid4()
     fake_customer_db.append(dict(customer))
-    return "created successfully"
+    return customer
 
 
-def update_customer(id: UUID, customer: Customer) -> str:
+def update_customer(id: UUID, customer: Customer) -> Customer:
     """update customers based on id given and customer object given
 
     Args:
@@ -49,7 +61,7 @@ def update_customer(id: UUID, customer: Customer) -> str:
         HTTPException: raises and exception when the id provided is not found
 
     Returns:
-        str: returns simple success message
+        Customer: returns updated customer
     """
 
     customers = fake_customer_db

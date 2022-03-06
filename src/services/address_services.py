@@ -4,7 +4,6 @@ from src.models.model import Address
 from src.db.db import fake_address_db, fake_customer_db
 
 
-
 def get_all() -> list:
     """get all address records from table address
 
@@ -53,21 +52,21 @@ def get_address(id: UUID) -> Address:
                         detail=f'The address you are trying to find was not found')
 
 
-def create_address(address: Address) -> str:
+def create_address(address: Address) -> Address:
     """create a record in the table address 
 
     Args:
         address (Address): accepts a dict of type Address
 
     Returns:
-        str: returns success message
+        Address: returns created Address
     """
     address.id = uuid4()
     fake_address_db.append(address)
     return address
 
 
-def update_address(id: UUID, address: Address) -> str:
+def update_address(id: UUID, address: Address) -> Address:
     """update the a specific Address based on id
 
     Args:
@@ -78,7 +77,7 @@ def update_address(id: UUID, address: Address) -> str:
         HTTPException: raises and exception when the id provided is not found
 
     Returns:
-        str: simple success message 
+        Address: returns updated address
     """
     addresses = fake_address_db
     for saved_address in addresses:
