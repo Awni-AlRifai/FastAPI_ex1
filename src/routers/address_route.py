@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from src.models.model import Address
-from src.services.address_services import get_all, create_address, update_address, get_address, get_address_id_from_customer
+from src.services.address_services import get_all, create_address, update_address, get_address, get_address_id_from_customer, delete_address
 
 
 router = APIRouter()
@@ -26,7 +26,7 @@ def update(id: int, address: Address):
 @router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 # should update optional fields
 def delete(id: int):
-    return update_address(id)
+    return delete_address(id)
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK)
