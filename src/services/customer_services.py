@@ -34,7 +34,7 @@ def create_customer(customer: Customer) -> str:
     Returns:
         str: returns simple success message
     """
-    fake_customer_db.append(customer)
+    fake_customer_db.append(dict(customer))
     return "created successfully"
 
 
@@ -55,7 +55,7 @@ def update_customer(id: int, customer: Customer) -> str:
     customers = fake_customer_db
     for saved_customer in customers:
         if saved_customer['id'] == id:
-            saved_customer.update(customer)
+            saved_customer.update(dict(customer))
             return 'updated successfully'
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The customer you are trying to update was not found')

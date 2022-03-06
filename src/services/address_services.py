@@ -63,7 +63,7 @@ def create_address(address: Address) -> str:
     Returns:
         str: returns success message
     """
-    fake_address_db.append(address)
+    fake_address_db.append(dict(address))
     return "created successfully"
 
 
@@ -83,7 +83,7 @@ def update_address(id: int, address: Address) -> str:
     addresses = fake_address_db
     for saved_address in addresses:
         if saved_address['id'] == id:
-            saved_address.update(address)
+            saved_address.update(dict(address))
             return 'updated successfully'
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The address you are trying to update was not found')
