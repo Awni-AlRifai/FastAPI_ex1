@@ -103,6 +103,7 @@ def delete_address(id: int) -> None:
     for saved_address in addresss:
         if saved_address['id'] == id:
             addresss.remove(saved_address)
+            return "Deleted Successfully"
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The address you are trying to update was not found')
