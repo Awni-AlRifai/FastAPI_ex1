@@ -13,19 +13,19 @@ def all_customers():
 
 
 @router.post('/create', status_code=status.HTTP_201_CREATED)
-def create_customer(customer: Customer):
+def create(customer: Customer):
     return create_customer(customer)
 
 
 @router.put('/update/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update_customer(id: int, customer: Customer):
-    return update_customer(customer)
+def update(id: int, customer: Customer):
+    return update_customer(id, customer)
 
 
 @router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 # should update optional fields
-def delete_customer(id: int):
+def delete(id: int):
     return delete_customer(id)
 
 

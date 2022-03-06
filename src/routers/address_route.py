@@ -1,40 +1,40 @@
 from fastapi import APIRouter, status
 
-from src.models import model
-from src.services import address_services
+from src.models.model import Address
+from src.services.address_services import get_all, create_address, update_address, get_address, get_address_id_from_customer
 
 
 router = APIRouter()
 
 
-@router.get('', status_code=status.HTTP_202_ACCEPTED)
+@router.get('', status_code=status.HTTP_200_OK)
 def all_address():
-    return address_services.get_all()
+    return get_all()
 
 
 @router.post('/create', status_code=status.HTTP_201_CREATED)
-def create_address(address: model.Address):
-    return address_services.create_address(address)
+def create(address: Address):
+    return create_address(address)
 
 
 @router.put('/update/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update_address(id: int, address: model.Address):
-    return address_services.update_address(address)
+def update(id: int, address: Address):
+    return update_address(id, address)
 
 
 @router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 # should update optional fields
-def delete_address(id: int):
-    return address_services.update_address(id)
+def delete(id: int):
+    return update_address(id)
 
 
-@router.get('/{id}', status_code=status.HTTP_202_ACCEPTED)
-def get_address(id: int):
-    return address_services.get_address(id)
+@router.get('/{id}', status_code=status.HTTP_200_OK)
+def get(id: int):
+    return get_address(id)
 
 
 @router.get('/customer/{id}', status_code=status.HTTP_200_OK)
-def get_address_from_customer(id: int):
-    address_id = address_services.get_address_id_from_customer(id)
-    return address_services.get_address(address_id)
+def show_address_from_customer(id: int):
+    address_id = get_address_id_from_customer(id)
+    return get_address(address_id)

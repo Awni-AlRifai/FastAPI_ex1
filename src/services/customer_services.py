@@ -52,10 +52,10 @@ def update_customer(id: int, customer: Customer) -> str:
         str: returns simple success message
     """
 
-    customer = fake_customer_db
-    for saved_customer in customer:
+    customers = fake_customer_db
+    for saved_customer in customers:
         if saved_customer['id'] == id:
-            saved_customer = customer
+            saved_customer.update(customer)
             return 'updated successfully'
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The customer you are trying to update was not found')
@@ -73,11 +73,12 @@ def delete_customer(id: int):
     """
     customers = fake_customer_db
     addresses = fake_address_db
+    # removing global will raise 'local variable 'customer_addres_id' referenced before assignment'
     global customer_addres_id
-    for saved_customer in customers:
-        if saved_customer['id'] == id:
-            customer_addres_id = saved_customer['address_id']
-            customers.remove(saved_customer)
+    for customer in customers:
+        if customer['id'] == id:
+            customer_addres_id = customer['address_id']
+            customers.remove(customer)
     if(not customer_addres_id):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'The customer you are trying to update was not found')

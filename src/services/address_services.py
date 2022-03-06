@@ -29,10 +29,9 @@ def get_address_id_from_customer(id: int) -> int:
     for customer in customers:
         if customer['id'] == id:
             return customer['address_id']
-        
+
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The customer you are trying to find address to is not found')
-
 
 
 def get_address(id: int) -> Address:
@@ -81,10 +80,10 @@ def update_address(id: int, address: Address) -> str:
     Returns:
         str: simple success message
     """
-    address = fake_address_db
-    for saved_address in address:
+    addresses = fake_address_db
+    for saved_address in addresses:
         if saved_address['id'] == id:
-            saved_address = address
+            saved_address.update(address)
             return 'updated successfully'
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The address you are trying to update was not found')
