@@ -1,6 +1,4 @@
-from typing import List
-from uuid import uuid4
-
+from uuid import UUID, uuid4
 from fastapi import HTTPException, status
 from src.db.db import fake_customer_db, fake_address_db
 from src.models.model import Customer
@@ -17,7 +15,7 @@ def get_all() -> list:
     return fake_customer_db
 
 
-def get_customer(id: int):
+def get_customer(id: UUID):
     customers = fake_customer_db
     for customer in customers:
         if customer['id'] == id:
@@ -40,11 +38,11 @@ def create_customer(customer: Customer) -> str:
     return "created successfully"
 
 
-def update_customer(id: int, customer: Customer) -> str:
+def update_customer(id: UUID, customer: Customer) -> str:
     """update customers based on id given and customer object given
 
     Args:
-        id (int): accepts customer id of int type
+        id (UUID): accepts customer id of UUID type
         customer (Customer): accepts customer dict of type Customer
 
     Raises:
@@ -63,12 +61,12 @@ def update_customer(id: int, customer: Customer) -> str:
                         detail=f'The customer you are trying to update was not found')
 
 
-def delete_customer(id: int):
+def delete_customer(id: UUID):
     # should update optional fields
     """delete customer and his address based on id and address_id
 
     Args:
-        id (int): accepts a customer id of int type
+        id (UUID): accepts a customer id of UUID type
 
     Raises:
         HTTPException: raises and exception when the id provided is not found

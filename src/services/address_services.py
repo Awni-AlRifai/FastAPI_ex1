@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid import UUID, uuid4
 from fastapi import HTTPException, status
 from sqlalchemy import null
 
@@ -17,14 +17,14 @@ def get_all() -> list:
     return fake_address_db
 
 
-def get_address_id_from_customer(id: int) -> int:
+def get_address_id_from_customer(id: UUID) -> UUID:
     """ accepts customer id and returns address id related to the customer 
 
     Args:
-        id (int): accepts customer_id of id type int
+        id (UUID): accepts customer_id of id type UUID
 
     Returns:
-        int: returns address id 
+        UUID: returns address id 
     """
     customers = fake_customer_db
     for customer in customers:
@@ -35,11 +35,11 @@ def get_address_id_from_customer(id: int) -> int:
                         detail=f'The customer you are trying to find address to is not found')
 
 
-def get_address(id: int) -> Address:
+def get_address(id: UUID) -> Address:
     """get a specific address from an id
 
     Args:
-        id (int): accepts an address of id type int
+        id (UUID): accepts an address of id type UUID
 
     Raises:
         HTTPException: raises and exception when the id provided is not found
@@ -66,14 +66,14 @@ def create_address(address: Address) -> str:
     """
     address.id = uuid4()
     fake_address_db.append(address)
-    return "created successfully"
+    return address
 
 
-def update_address(id: int, address: Address) -> str:
+def update_address(id: UUID, address: Address) -> str:
     """update the a specific Address based on id
 
     Args:
-        id (int): Address id of type int
+        id (UUID): Address id of type UUID
         address (Address): dict of Address
 
     Raises:
@@ -86,16 +86,16 @@ def update_address(id: int, address: Address) -> str:
     for saved_address in addresses:
         if saved_address['id'] == id:
             saved_address.update(dict(address))
-            return 'updated successfully'
+            return saved_address
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The address you are trying to update was not found')
 
 
-def delete_address(id: int) -> None:
+def delete_address(id: UUID) -> None:
     """delete an address based on id
 
     Args:
-        id (int): address id of type int
+        id (UUID): address id of type UUID
 
     Raises:
         HTTPException: raises and exception when the id provided is not found
