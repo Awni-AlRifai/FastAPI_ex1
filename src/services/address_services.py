@@ -29,7 +29,7 @@ def get_address_id_from_customer(id: int) -> int:
     customers = fake_customer_db
     for customer in customers:
         if customer['id'] == id:
-            return customer
+            return customer['id']
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The customer you are trying to find address to is not found')
