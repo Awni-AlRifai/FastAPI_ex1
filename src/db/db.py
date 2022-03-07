@@ -1,3 +1,6 @@
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from uuid import uuid4
 from src.models.model import Gender
 
@@ -21,3 +24,14 @@ fake_address_db = [
     {"id": uuid4(), "phone": "0733333333", "email": "3@gmail.com",
      "country": "Jordan", "city": "Jarash", "street": "Jarash Street", }
 ]
+SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:root@localhost/crud'
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+Base = declarative_base()
+
+def get_db():
+    db=SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

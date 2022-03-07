@@ -1,10 +1,11 @@
 from uuid import UUID, uuid4
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 from src.models.model import Address
 from src.db.db import fake_address_db, fake_customer_db
 
 
-def get_all() -> list:
+def get_all(db:Session) -> list:
     """get all address records from table address
 
     Returns:
@@ -14,7 +15,7 @@ def get_all() -> list:
     return fake_address_db
 
 
-def get_address_id_from_customer(id: UUID) -> UUID:
+def get_address_id_from_customer(id: UUID,db:Session) -> UUID:
     """ accepts customer id and returns address id related to the customer 
 
     Args:
@@ -32,7 +33,7 @@ def get_address_id_from_customer(id: UUID) -> UUID:
                         detail=f'The customer you are trying to find address to is not found')
 
 
-def get_address(id: UUID) -> Address:
+def get_address(id: UUID,db:Session) -> Address:
     """get a specific address from an id
 
     Args:
@@ -52,7 +53,7 @@ def get_address(id: UUID) -> Address:
                         detail=f'The address you are trying to find was not found')
 
 
-def create_address(address: Address) -> Address:
+def create_address(address: Address,db:Session) -> Address:
     """create a record in the table address 
 
     Args:
@@ -66,7 +67,7 @@ def create_address(address: Address) -> Address:
     return address
 
 
-def update_address(id: UUID, address: Address) -> Address:
+def update_address(id: UUID, address: Address,db:Session) -> Address:
     """update the a specific Address based on id
 
     Args:
@@ -88,7 +89,7 @@ def update_address(id: UUID, address: Address) -> Address:
                         detail=f'The address you are trying to update was not found')
 
 
-def delete_address(id: UUID) -> None:
+def delete_address(id: UUID,db:Session) -> None:
     """delete an address based on id
 
     Args:
