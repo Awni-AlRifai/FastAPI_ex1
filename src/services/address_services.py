@@ -1,8 +1,8 @@
-from uuid import UUID, uuid4
+from uuid import UUID
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from src.models.model import Address
-from src.db.db import fake_address_db, fake_customer_db
+from src.models.model import Address, AddressUpdate
+from src.db.schemas import Address as AddressSchema,Customer as CustomerSchema
 
 
 def get_all(db:Session) -> list:
@@ -12,7 +12,7 @@ def get_all(db:Session) -> list:
         list: returns a list of dict if type address
     """
 
-    return fake_address_db
+    return db.query(AddressSchema).all()
 
 
 def get_address_id_from_customer(id: UUID,db:Session) -> UUID:
@@ -24,13 +24,11 @@ def get_address_id_from_customer(id: UUID,db:Session) -> UUID:
     Returns:
         UUID: returns address id 
     """
-    customers = fake_customer_db
-    for customer in customers:
-        if customer['id'] == id:
-            return customer['id']
-
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The customer you are trying to find address to is not found')
+    customer=db.query(CustomerSchema).filter(CustomerSchema.id==id)
+    if not customer:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail=f'The customer you are trying to find address to was not found')
+    return customer.first().id
 
 
 def get_address(id: UUID,db:Session) -> Address:
@@ -45,12 +43,12 @@ def get_address(id: UUID,db:Session) -> Address:
     Returns:
         Address: return a dict of type Address
     """
-    addressses = fake_address_db
-    for address in addressses:
-        if address['id'] == id:
-            return address
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+    address = db.query(AddressSchema).filter(AddressSchema.id==id)
+    if not address:
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The address you are trying to find was not found')
+    return address.first()
+   
 
 
 def create_address(address: Address,db:Session) -> Address:
@@ -62,12 +60,19 @@ def create_address(address: Address,db:Session) -> Address:
     Returns:
         Address: returns created Address
     """
-    address.id = uuid4()
-    fake_address_db.append(address)
-    return address
+    new_address=AddressSchema(phone=address.phone,
+        email=address.email,
+        country=address.country,
+        city=address.city,
+        street=address.street)
+    
+    db.add(new_address)
+    db.commit()
+    db.refresh(new_address)
+    return new_address
 
 
-def update_address(id: UUID, address: Address,db:Session) -> Address:
+def update_address(id: UUID, address: AddressUpdate,db:Session) -> Address:
     """update the a specific Address based on id
 
     Args:
@@ -80,14 +85,19 @@ def update_address(id: UUID, address: Address,db:Session) -> Address:
     Returns:
         Address: returns updated address
     """
-    addresses = fake_address_db
-    for saved_address in addresses:
-        if saved_address['id'] == id:
-            saved_address.update(dict(address))
-            return saved_address
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The address you are trying to update was not found')
-
+    saved_address = db.query(AddressSchema).filter(AddressSchema.id==id)
+    if not address:
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail=f'The address you are trying to find was not found')
+    saved_address=saved_address.first()
+    saved_address.phone=address.phone or saved_address.phone,
+    saved_address.email=address.email or saved_address.email,
+    saved_address.country=address.country or saved_address.country
+    saved_address.city=address.city or saved_address.city
+    saved_address.street=address.street or saved_address.street
+    db.commit()
+    db.refresh(saved_address)
+    return saved_address
 
 def delete_address(id: UUID,db:Session) -> None:
     """delete an address based on id
@@ -99,11 +109,13 @@ def delete_address(id: UUID,db:Session) -> None:
         HTTPException: raises and exception when the id provided is not found
     """
     # should update optional fields
-    addresss = fake_address_db
-    for saved_address in addresss:
-        if saved_address['id'] == id:
-            addresss.remove(saved_address)
-            return "Deleted Successfully"
-
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+    address = db.query(AddressSchema).filter(AddressSchema.id==id)
+    if not address:
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The address you are trying to update was not found')
+    address.delete(synchronize_session=False)
+    db.commit()
+
+   
+
+   

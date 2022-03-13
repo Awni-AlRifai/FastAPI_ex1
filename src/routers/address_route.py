@@ -1,7 +1,7 @@
 from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, status,Depends
-from src.models.model import Address
+from src.models.model import Address, AddressUpdate
 from src.db.db import get_db
 from src.services.address_services import get_all, create_address, update_address, get_address, get_address_id_from_customer, delete_address
 
@@ -21,7 +21,7 @@ def create(address: Address,db:Session=Depends(get_db)):
 
 @router.put('/update/{id}', status_code=status.HTTP_202_ACCEPTED)
 # should update optional fields
-def update(id: UUID, address: Address,db:Session=Depends(get_db)):
+def update(id: UUID, address: AddressUpdate,db:Session=Depends(get_db)):
     return update_address(id, address,db)
 
 

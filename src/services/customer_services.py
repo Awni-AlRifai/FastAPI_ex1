@@ -51,6 +51,7 @@ def create_customer(customer: Customer,db:Session) -> CustomerSchema:
     """
     new_customer=CustomerSchema(
         first_name=customer.first_name,
+        middle_name=customer.middle_name,
         last_name=customer.last_name,
         age=customer.age,
         gender=customer.gender,
@@ -84,8 +85,9 @@ def update_customer(id: UUID, customer: CustomerUpdate,db:Session) -> CustomerSc
                         detail=f'The customer you are trying to update was not found')
   
     saved_customer=saved_customer.first()
-    saved_customer.first_name=customer.first_name or saved_customer.first_name,
-    saved_customer.last_name=customer.last_name or saved_customer.last_name,
+    saved_customer.first_name=customer.first_name or saved_customer.first_name
+    saved_customer.last_name=customer.last_name or saved_customer.last_name
+    saved_customer.middle_name=customer.middle_name or saved_customer.middle_name
     saved_customer.age=customer.age or saved_customer.age
     saved_customer.adult=customer.adult or saved_customer.adult
     saved_customer.gender=customer.gender or saved_customer.gender
