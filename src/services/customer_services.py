@@ -1,8 +1,9 @@
 from uuid import UUID
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from src.models.model import Customer, CustomerUpdate
+from src.models.model import BaseCustomer, GetCustomer
 from src.db.schemas import Customer as CustomerSchema
+from src.services.address_services import validate_address
 
 def get_all(db:Session) -> list:
     """get all customer from customers table
@@ -16,7 +17,7 @@ def get_all(db:Session) -> list:
     return db.query(CustomerSchema).all()
 
 
-def get_customer(id: UUID,db:Session) -> Customer:
+def get_customer(id: UUID,db:Session) -> GetCustomer:
     """ gets cusotmer id from customers table and returns the customer that have the same id
 
     Args:
@@ -32,38 +33,41 @@ def get_customer(id: UUID,db:Session) -> Customer:
     saved_customer=db.query(CustomerSchema).filter(CustomerSchema.id==id)
     if not saved_customer.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f'The customer you are trying to update was not found')
+                        detail=f'The customer you are trying to find was not found')
         
     return saved_customer.first()
 
    
 
 
-def create_customer(customer: Customer,db:Session) -> CustomerSchema:
+def create_customer(customer: BaseCustomer,db:Session) -> GetCustomer:
     """create customers
 
     Args:
         customer (model.Customer): accepts Customer object
         db (Session):local session of databse
+        
+    Raises:
+        HTTPException: raises an exception when the address_id is not valid
 
     Returns:
          CustomerSchema: returns created customer 
     """
-    new_customer=CustomerSchema(
-        first_name=customer.first_name,
-        middle_name=customer.middle_name,
-        last_name=customer.last_name,
-        age=customer.age,
-        gender=customer.gender,
-        adult=customer.adult
-        )
-    db.add(new_customer)
-    db.commit()
-    db.refresh(new_customer)
-    return new_customer
+    #check if address id is available
+    
+    if customer.address_id!=None:
+        if not validate_address(customer.address_id,db).first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'The address_id {customer.address_id} was not found')
+        
+        
+    # new_customer=CustomerSchema(**customer.dict())
+    # db.add(new_customer)
+    # db.commit()
+    # db.refresh(new_customer)
+    # return new_customer
 
 
-def update_customer(id: UUID, customer: CustomerUpdate,db:Session) -> CustomerSchema:
+def update_customer(id: UUID, customer: BaseCustomer,db:Session) -> GetCustomer:
   
     """update customers based on id given and customer object given
 
@@ -73,37 +77,26 @@ def update_customer(id: UUID, customer: CustomerUpdate,db:Session) -> CustomerSc
         db (Session):local session of databse
 
     Raises:
+        HTTPException: raises an exception when the address_id is not valid
         HTTPException: raises and exception when the id provided is not found
 
     Returns:
         CustomerSchema: returns updated customer
     """
+    
+    if customer.address_id:
+        if not validate_address(customer.address_id,db).first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'The address_id {customer.address_id} was not found')
 
     saved_customer=db.query(CustomerSchema).filter(CustomerSchema.id==id)
     if not saved_customer.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                         detail=f'The customer you are trying to update was not found')
-  
-    saved_customer=saved_customer.first()
-    saved_customer.first_name=customer.first_name or saved_customer.first_name
-    saved_customer.last_name=customer.last_name or saved_customer.last_name
-    saved_customer.middle_name=customer.middle_name or saved_customer.middle_name
-    saved_customer.age=customer.age or saved_customer.age
-    saved_customer.adult=customer.adult or saved_customer.adult
-    saved_customer.gender=customer.gender or saved_customer.gender
+    
+    saved_customer.update(customer.dict(),synchronize_session=False)
     db.commit()
-    db.refresh(saved_customer)
+    return saved_customer.first()
     
-    return saved_customer
-        
-    
-    
-        
-    
-   
-    
-
-
 def delete_customer(id: UUID,db:Session)->None:
     # should update optional fields
     """delete customer and his address based on id and address_id
@@ -120,4 +113,8 @@ def delete_customer(id: UUID,db:Session)->None:
     #remember to delete the address also when we add the address table
     customer.delete(synchronize_session=False)
     db.commit()
+
+
+    
+    
    

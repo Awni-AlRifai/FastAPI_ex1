@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional
 from uuid import UUID
 from pydantic import BaseModel
+from uvicorn import Config
 
 
         
@@ -10,38 +11,34 @@ class Gender(str, Enum):
     female = 'female'
 
 
-class Customer(BaseModel):
+class BaseCustomer(BaseModel):
     first_name: str
     last_name: str
     middle_name: str
     age: int
     gender: Gender
     adult: bool
-    # address_id: Optional[int]
+    address_id:Optional[UUID]
     
-class CustomerUpdate(BaseModel):
-    first_name:Optional[str]
-    last_name: Optional[str]
-    middle_name: Optional[str]
-    age: Optional[int]
-    gender: Optional[Gender]
-    adult: Optional[bool]
+    class Config():
+        orm_mode=True
+    
+class GetCustomer(BaseCustomer):
+    id:UUID
+    
+   
     
 
-
-
-class Address(BaseModel):
-    id: Optional[UUID]
+class BaseAddress(BaseModel):
     phone: str
     email: str
     country: str
     city: str
     street: str
     
-class AddressUpdate(BaseModel):
-    phone: Optional[str]
-    email: Optional[str]
-    country: Optional[str]
-    city: Optional[str]
-    street: Optional[str]
+    class Config():
+        orm_mode=True
+    
+class GetAddress(BaseAddress):
+    id:UUID
     
