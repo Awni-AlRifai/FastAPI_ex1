@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Optional
 from uuid import UUID
-from pydantic import BaseModel
-from uvicorn import Config
+from pydantic import BaseModel,EmailStr
+from datetime import datetime
 
 
         
@@ -41,4 +41,24 @@ class BaseAddress(BaseModel):
     
 class GetAddress(BaseAddress):
     id:UUID
+
+class BaseUser(BaseModel):
+    name:str
+    email:str
+
+class BaseUser(BaseModel):
+    name:str
+    email:EmailStr
+    
+    class Config():
+        orm_mode=True
+class CreateUser(BaseUser):
+    password:str
+class GetUser(BaseUser):
+    id:UUID
+    created_at:datetime
+
+class UserLogin(BaseModel):
+    email:EmailStr
+    password:str
     

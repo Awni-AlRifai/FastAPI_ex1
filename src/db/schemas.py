@@ -1,6 +1,7 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, ForeignKey,Integer,String,Enum,Boolean
+from sqlalchemy import TIMESTAMP, Column, ForeignKey,Integer,String,Enum,Boolean
+from sqlalchemy.sql.expression import text
 from src.db import Base
 from src.models.model import Gender
 from sqlalchemy.orm import relationship
@@ -27,6 +28,17 @@ class Address(Base):
     city=Column(String)
     street=Column(String)
     customer=relationship('Customer',back_populates='address')
+
+class User(Base):
+    __tablename__="users"
+     ##as_uuid=False – if True, values will be interpreted as Python uuid objects, converting to/from string via the DBAPI.
+    id=Column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    name=Column(String)
+    email=Column(String,unique=True)
+    password=Column(String)
+    created_at=Column(TIMESTAMP(timezone=True),server_default=text('now()'))
+   
+
     
    
   

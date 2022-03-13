@@ -60,11 +60,11 @@ def create_customer(customer: BaseCustomer,db:Session) -> GetCustomer:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'The address_id {customer.address_id} was not found')
         
         
-    # new_customer=CustomerSchema(**customer.dict())
-    # db.add(new_customer)
-    # db.commit()
-    # db.refresh(new_customer)
-    # return new_customer
+    new_customer=CustomerSchema(**customer.dict())
+    db.add(new_customer)
+    db.commit()
+    db.refresh(new_customer)
+    return new_customer
 
 
 def update_customer(id: UUID, customer: BaseCustomer,db:Session) -> GetCustomer:
